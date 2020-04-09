@@ -21,7 +21,7 @@ int* cout(int *a, int k)
     }
    rc[i]=count;
    }
-   return &rc[0];
+   return rc;
 }
 
 int* minmax(int *a,int k)
@@ -52,12 +52,12 @@ int* minmax(int *a,int k)
       re[i]=min+max;
     }
 
-  return &re[0];
+  return re;
 }
 
-int* check(int *a, int k)
+int check(int *a, int k)
 {
-  int *por = (int* ) malloc(sizeof(int)*k);
+ 
   int *q,*w,*e,x,y,c,qm[k],wm[k],count=0;
   
   for(int i=0; i<k; i++)
@@ -72,22 +72,24 @@ int* check(int *a, int k)
 
   q=cout(qm,k);
   w=minmax(wm,k);
-
+  
   for (int i=0; i<k; i++)
   {
-    if (w[i] == w[k-1]) por[i]=a[i];
-    else por[i]=0;
+    if (w[i] == w[k-1])  {++count; a = (int*) realloc (a, (k-count) * sizeof(int)); a[count-1]=a[i];}
   }
 
-  e=cout(por,k);
+
+
+
+  e=cout(a,k);
   
-  for (int j=0; j<k-1; j++)
+  for (int j=0; j<count-1; j++)
   {
-    for (int i=0; i<k-1-j; i++)
+    for (int i=0; i<count-1-j; i++)
     { 
       if (e[i]>e[i+1])
       {
-        x=e[i];y=por[i];e[i]=e[i+1];por[i]=por[i+1];e[i+1]=x;por[i+1]=y;
+        x=e[i];y=a[i];e[i]=e[i+1];a[i]=a[i+1];e[i+1]=x;a[i+1]=y;
       }
     }
   } 
@@ -95,7 +97,9 @@ int* check(int *a, int k)
   free(q);
   free(w);
   
-  return &por[0];
+ 
+
+  return count;
 }
 
 
@@ -104,7 +108,7 @@ int* check(int *a, int k)
 int main()
 {    
   int i,n,l;
-  int *c,*f,*p;
+  int *c,*f;
   printf("Vvedite kol-vo chisel\n" );
   scanf("%i",&n);
   printf("Vvedite chisla tekushei posledovatel'nosti\n" );
@@ -116,20 +120,16 @@ int main()
       scanf("%d", &a[i]);
     }
   
-  p = check(a,n);
+  int p = check(a,n);
  
-  for (int i=0; i<n; i++)
-  {
-    if (p[i]==0) ++l;
-  }
- 
+
   printf("\n");
   printf("Chisla novoi posledovatel'nosti\n");
   
-  for (int i=l; i<n; i++)
+  for (i=0; i<p; i++)
   {
-    printf("b[%i] = %i\n",i-l+1,p[i] );
+    printf("%i\n",a[i] );
   }
   
-  free(p);
+  free(a);
 }

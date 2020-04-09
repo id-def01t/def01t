@@ -2,6 +2,28 @@
 #include <malloc.h>
 
 
+
+int** reform(int n, int m, int **k)
+{
+    int i,j,min,max;
+    for(i=0; i<n; i++,printf("\n"))
+    {
+        min=1000,max=0;
+        m=*k[i];
+        for(j=1; j<=m; j++) 
+        {    
+            if (k[i][j]<=min) min=k[i][j]; 
+            if (k[i][j]>=max) max=k[i][j];  
+        }
+        for(j=1; j<=m; j++) 
+        {
+            if (k[i][j]==min) k[i][j]=max;
+            else {if (k[i][j]==max) k[i][j]=min;}
+        }               
+    } 
+    return k;
+}
+
 int main()
 {
 	int i,j,n,m,**a,k,l,z,x,min,max;
@@ -29,21 +51,7 @@ int main()
         for(j=1; j<=m; j++) printf("%3d",a[i][j]);
     } 
     
-    for(i=0; i<n; i++,printf("\n"))
-    {
-    	min=1000,max=0;
-        m=*a[i];
-        for(j=1; j<=m; j++) 
-        {    
-            if (a[i][j]<=min) min=a[i][j]; 
-            if (a[i][j]>=max) max=a[i][j];  
-        }
-        for(j=1; j<=m; j++) 
-        {
-            if (a[i][j]==min) a[i][j]=max;
-            else {if (a[i][j]==max) a[i][j]=min;}
-        }		    	
-    } 
+    a=reform(n,m,a);
 
     printf("Resultat(poezd sdelal bum):\n");
     for(i=0; i<n; i++,printf("\n"))
