@@ -5,8 +5,8 @@
 
 int* cout(int *a, int k)
 {
-  int *d = (int* ) malloc(sizeof(int)*k);
-  int *rc = (int* ) malloc(sizeof(int)*k);
+  int *d = (int*) malloc(sizeof(int)*k);
+  int *rc = (int*) malloc(sizeof(int)*k);
   
   memcpy(d,a,(sizeof(int)*k));
   
@@ -20,16 +20,18 @@ int* cout(int *a, int k)
     }
     rc[i]=count;
   }
+
   free(d);
+
   return rc;
 }
 
 
 int* minmax(int *a,int k)
 {
-  int *c = (int* ) malloc(sizeof(int)*k);
-  int *d = (int* )  malloc(sizeof(int)*k);
-  int *re = (int* ) malloc(sizeof(int)*k);
+  int *c = (int*) malloc(sizeof(int)*k);
+  int *d = (int*)  malloc(sizeof(int)*k);
+  int *re = (int*) malloc(sizeof(int)*k);
   
   memcpy(d,a,(sizeof(int)*k));
     
@@ -47,7 +49,10 @@ int* minmax(int *a,int k)
     }  
     re[i]=min+max;
   }
+
   free(d);
+  free(c);
+
   return re;
 }
 
@@ -55,9 +60,9 @@ int* minmax(int *a,int k)
 int check(int *a, int k)
 {
   int x,y,c,count=0; 
-  int *q = (int* ) malloc(sizeof(int)*k);
-  int *w = (int* )malloc(sizeof(int)*k);
-  int *e = (int* )malloc(sizeof(int)*k);
+  int *q = (int*) malloc(sizeof(int)*k);
+  int *w = (int*)malloc(sizeof(int)*k);
+  int *e = (int*)malloc(sizeof(int)*k);
   
   q=cout(a,k);
   w=minmax(a,k);
@@ -79,9 +84,11 @@ int check(int *a, int k)
       }
     }
   } 
+
   free(q);
   free(w);
   free(e);
+
   return count;
 }
 

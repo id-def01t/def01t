@@ -1,20 +1,11 @@
 #include <stdio.h>
 #include <malloc.h>
+#include <limits.h>
 
-void** ish(int n, int m, int **k)
-{
-    printf("Ishodnaya matrica:\n");
-    int i,j;
-    for(i=0; i<n; i++,printf("\n"))
-    {
-        m=*k[i];
-        for(j=1; j<=m; j++) printf("%3d",k[i][j]);
-    }   
-}
 
-void** res(int n, int m, int **k)
+void vivod(int n, int m, int **k, char *s)
 {
-    printf("Resultat(poezd sdelal bum):\n");
+    printf("%s\n", s);
     int i,j;
     for(i=0; i<n; i++,printf("\n"))
     {
@@ -23,12 +14,13 @@ void** res(int n, int m, int **k)
     } 
 }
 
+
 int** reform(int n, int m, int **k)
 {
     int i,j,min,max;
     for(i=0; i<n; i++,printf("\n"))
     {
-        min=214748647,max=0;  
+        min=INT_MAX;max=0;             
         m=*k[i];
         for(j=1; j<=m; j++) 
         {    
@@ -43,6 +35,7 @@ int** reform(int n, int m, int **k)
     } 
     return k;
 }
+
 
 int main()
 {
@@ -63,14 +56,20 @@ int main()
         }
     } 
 
-    ish(n,m,a);
+    char *is="Ishodnaya matrica";
+    char *r="Resultiruioshaya matrica";
+
+    vivod(n,m,a,is);
     
     a=reform(n,m,a);
 
-    res(n,m,a);
+    vivod(n,m,a,r);
  
     for(i=0; i<n; i++) free(a[i]);
+   
     free(a);
+    
     getchar();
+    
     return 0;
 }
