@@ -1,85 +1,71 @@
 #include <stdio.h>
 #include <malloc.h>
+#include <string.h>
+
 
 int* cout(int *a, int k)
 {
-  int d[k];
-  
-  for (int i=0; i<k; i++)
-  {
-     d[i]=a[i];
-  }
+  int *d = (int* ) malloc(sizeof(int)*k);
   int *rc = (int* ) malloc(sizeof(int)*k);
   
+  memcpy(d,a,(sizeof(int)*k));
+  
   for (int i=0; i<k; i++)
   {
-     int count=0;
-     while (d[i]!=0)
+    int count=0;
+    while (d[i]!=0)
     {        
       d[i]/=10;
       ++count;
     }
-   rc[i]=count;
-   }
-   return rc;
+    rc[i]=count;
+  }
+  free(d);
+  return rc;
 }
+
 
 int* minmax(int *a,int k)
 {
-  int *c;
-  int d[k];
+  int *c = (int* ) malloc(sizeof(int)*k);
+  int *d = (int* )  malloc(sizeof(int)*k);
   int *re = (int* ) malloc(sizeof(int)*k);
   
-  for (int i=0; i<k; i++)
-    {
-      d[i]=a[i];
-    }
+  memcpy(d,a,(sizeof(int)*k));
     
-    c = cout(d,k);
+  c = cout(d,k);
 
-    for (int i=0; i<k; i++)
+  for (int i=0; i<k; i++)
+  {
+    int min=9, max=0;
+    while (c[i]>0)
     {
-      int min=9, max=0;
-      while (c[i]>0)
-      {
-        if((d[i]%10)<=min) min=d[i]%10;
-        if((d[i]%10)>=max) max=d[i]%10;
-        d[i]/=10;
-        --c[i];
-       
-      }
-      
-      re[i]=min+max;
-    }
-
+     if((d[i]%10)<=min) min=d[i]%10;
+     if((d[i]%10)>=max) max=d[i]%10;
+     d[i]/=10;
+     --c[i]; 
+    }  
+    re[i]=min+max;
+  }
+  free(d);
   return re;
 }
 
+
 int check(int *a, int k)
 {
- 
-  int *q,*w,*e,x,y,c,qm[k],wm[k],count=0;
+  int x,y,c,count=0; 
+  int *q = (int* ) malloc(sizeof(int)*k);
+  int *w = (int* )malloc(sizeof(int)*k);
+  int *e = (int* )malloc(sizeof(int)*k);
   
-  for(int i=0; i<k; i++)
-  {
-    qm[i]=a[i];
-  }
-
-  for(int i=0; i<k; i++)
-  {
-    wm[i]=a[i];
-  }
-
-  q=cout(qm,k);
-  w=minmax(wm,k);
+  q=cout(a,k);
+  w=minmax(a,k);
   
   for (int i=0; i<k; i++)
   {
     if (w[i] == w[k-1])  {++count; a = (int*) realloc (a, (k-count) * sizeof(int)); a[count-1]=a[i];}
   }
-
-
-
 
   e=cout(a,k);
   
@@ -93,16 +79,11 @@ int check(int *a, int k)
       }
     }
   } 
-
   free(q);
   free(w);
-  
- 
-
+  free(e);
   return count;
 }
-
-
 
 
 int main()
@@ -115,14 +96,13 @@ int main()
   int *a = (int* ) malloc(sizeof(int)*n);
   
   for (i = 0; i<n; i++)
-    {
-      printf("a[%d] = ", i);
-      scanf("%d", &a[i]);
-    }
+  {
+    printf("a[%d] = ", i);
+    scanf("%d", &a[i]);
+  }
   
   int p = check(a,n);
  
-
   printf("\n");
   printf("Chisla novoi posledovatel'nosti\n");
   
