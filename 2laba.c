@@ -1,14 +1,34 @@
 #include <stdio.h>
 #include <malloc.h>
 
+void** ish(int n, int m, int **k)
+{
+    printf("Ishodnaya matrica:\n");
+    int i,j;
+    for(i=0; i<n; i++,printf("\n"))
+    {
+        m=*k[i];
+        for(j=1; j<=m; j++) printf("%3d",k[i][j]);
+    }   
+}
 
+void** res(int n, int m, int **k)
+{
+    printf("Resultat(poezd sdelal bum):\n");
+    int i,j;
+    for(i=0; i<n; i++,printf("\n"))
+    {
+        m=*k[i];
+        for(j=1; j<=m; j++) printf("%3d",k[i][j]);
+    } 
+}
 
 int** reform(int n, int m, int **k)
 {
     int i,j,min,max;
     for(i=0; i<n; i++,printf("\n"))
     {
-        min=1000,max=0;
+        min=214748647,max=0;  
         m=*k[i];
         for(j=1; j<=m; j++) 
         {    
@@ -43,22 +63,11 @@ int main()
         }
     } 
 
-
-    printf("Ishodnaya matrica:\n");
-    for(i=0; i<n; i++,printf("\n"))
-    {
-        m=*a[i];
-        for(j=1; j<=m; j++) printf("%3d",a[i][j]);
-    } 
+    ish(n,m,a);
     
     a=reform(n,m,a);
 
-    printf("Resultat(poezd sdelal bum):\n");
-    for(i=0; i<n; i++,printf("\n"))
-    {
-        m=*a[i];
-        for(j=1; j<=m; j++) printf("%3d",a[i][j]);
-    } 
+    res(n,m,a);
  
     for(i=0; i<n; i++) free(a[i]);
     free(a);
