@@ -33,7 +33,6 @@ Elem *GetLine()
 }
 
 
-
 //Удалить число или разделители, начиная с текущего элемента
 //где r = 0 - число, 1 - разделитель
 Elem *DelElems(Elem *Elem1, int r)
@@ -106,6 +105,8 @@ Elem *ProcessLine(Elem *Elem0)
   }
   return Elem0; //Вернуть указатель на начало списка
 }
+
+
 //Вывод результата
 void PrintLine(Elem *ElemCurr)
 {
@@ -127,7 +128,6 @@ void FreeElems(Elem *ElemCurr)
     free(Elem0);
   }
 }
-
 
 
 int main()
