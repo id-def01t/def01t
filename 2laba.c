@@ -10,7 +10,7 @@ void vivod(int n, int m, int **k, char *s)
     for(i=0; i<n; i++,printf("\n"))
     {
         m=*k[i];
-        for(j=1; j<=m; j++) printf("%3d",k[i][j]);
+        for(j=1; j<=m; j++) printf("%3d|",k[i][j]);
     } 
 }
 
