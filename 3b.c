@@ -134,9 +134,7 @@ int main()
 {
   while (1) {
     //Создать список
-    
     Elem *ElemFirst = GetLine();
-    if (ElemFirst == NULL) break;
     if (ElemFirst) { //Если список не пустой
       //Обработка строк
       ElemFirst=ProcessLine(ElemFirst);
