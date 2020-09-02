@@ -4,7 +4,7 @@
 #include <time.h>
 #include <locale.h>
 
-///////////////////// По мелочи //////////////////////
+/////////////////////   //////////////////////
 typedef struct Node
 {
 	char* key;
@@ -16,25 +16,25 @@ typedef struct Node
 
 const char* msgs[] =
 {
-	"1. Добавить элемент",
-	"2. Считать дерево из файла",
-	"3. Поиск по ключу",
-	"4. Поиск по первым N символам ключа",
-	"5. Удаление по ключу",
-	"6. Таймирование",
-	"7. Вывести таблицу больше определенного ключа",
-	"8. Вывести дерево",
-    "9. Выход"
+	"1. Add element",
+	"2. Read tree from file",
+	"3. Find by key",
+	"4. Search key by N symbols",
+	"5. Delete tree",
+	"6. Timing",
+	"7. Show tree more than defined key",
+	"8. Show tree",
+    "9. Exit"
 };
 
-const char *errmsgs[] = { "OK", "Элемент с таким ключом уже существует", "Ключ не найден", "Нет элемента с такими параметрами" };const
+const char *errmsgs[] = { "OK", "     ", "  ", "    ", " " };
 
 int m = 0;
 const int NMsgs = sizeof(msgs) / sizeof(msgs[0]);
 //////////////////////////////////////////////////////
 
 
-///////////////////// Прототипы ////////////////////////
+/////////////////////  ////////////////////////
 int get_int(int* a);
 char* get_str();
 void d_add(Node* root);
@@ -56,8 +56,8 @@ void print(Node* root);
 ///////////////////////////////////////////////////////
 
 
-///////////////////// Функции /////////////////////////
-///////////////// Диалог + функции ввода /////////////
+/////////////////////  /////////////////////////
+/////////////////  +   /////////////
 int dialog(const char *msgs[], int N) 
 {
 	char *errmsgs = "";
@@ -65,14 +65,14 @@ int dialog(const char *msgs[], int N)
 	do 
     {
 		puts(errmsgs);
-		errmsgs = "Введите число от 1 до 9 \n";
-		for (i = 0; i < N; ++i)	// Вывод списка альтернатив
+		errmsgs = "Enter a number from 1 to 9 \n";
+		for (i = 0; i < N; ++i)	//   
 		{	
             puts(msgs[i]);
         }
-        printf("Ваш выбор: ");
-		n = get_int(&rc);	// Ввод номера альтернативы
-		if (n == 0)		// Конец файла - конец работы
+        printf("Your choice: ");
+		n = get_int(&rc);	//   
+		if (n == 0)		//   -  
 		{
             rc = 0;
         }
@@ -87,13 +87,13 @@ int get_int(int *a)
 	do 
     {
 		n = scanf("%d", a, sizeof(int));
-		if (n < 0)			/*Обнаружен конец файла */
+		if (n < 0)			/*   */
 		{	
             return 0;
         }
         if (n == 0) 
-        {			/*Обнаружен некорректный символ - ошибка */
-			printf("%s\n", "Error! Please, input again:\n");
+        {			/*   -  */
+			printf("%s\n", " : \n");
 			clean_stdin();
 		}
 	} 
@@ -139,14 +139,14 @@ void clean_stdin()
 ///////////////////////////////////////////////////////
 
 
-////////////////// Диалоговые функции /////////////////
-void d_add(Node* root) // диалоговая функция добавления элемента в дерево
+//////////////////   /////////////////
+void d_add(Node* root) //      
 {
 	char* key;
 	char* info;
-	printf("Введите ключ: ");
+	printf(" : ");
 	key = get_str();
-	printf("Введите информацию: ");
+	printf(" : ");
 	info = get_str();
 	if (add(root, key, info) == 2)
     {
@@ -156,7 +156,7 @@ void d_add(Node* root) // диалоговая функция добавления элемента в дерево
     return;
 }
  
-void d_r_from_file(Node* root) // диалоговая функция добавления из файла
+void d_r_from_file(Node* root) //     
 {
 	FILE* file;
 	char* filename;
@@ -168,7 +168,7 @@ void d_r_from_file(Node* root) // диалоговая функция добавления из файла
 	free(filename);
 	if (!file)
 	{
-		printf("Невозможно открыть файл \n");
+		printf("   \n");
 		return;
 	}
 	do
@@ -190,10 +190,10 @@ void d_r_from_file(Node* root) // диалоговая функция добавления из файла
 	fclose(file);
 }
 
-void d_find_by_key(Node* root) // диалоговая функция поиска по ключу
+void d_find_by_key(Node* root) //     
 {
 	char* key;
-	printf("Введите ключ: ");
+	printf(" : ");
 	key = get_str();
 	Node* cur = find_by_key(root, key);
 	if (!cur)
@@ -202,22 +202,22 @@ void d_find_by_key(Node* root) // диалоговая функция поиска по ключу
     }
     else
 	{
-		printf("Key: %s \t Info: %s", cur->key, cur->info);
+		printf("Key: %s \t Info: %s \n", cur->key, cur->info);
 	}
 	free(key);
 }
 
-void d_find_by_key_N(Node* root) // диалоговая функция поиска по N символам
+void d_find_by_key_N(Node* root) //     N 
 {
 	int k = 0, n = 0;
 	char* key;
-	printf("Введите количество символов для поиска: ");
+	printf("    : ");
 	k = get_int(&n);
-	printf("Введите символы: ");
+	printf(" : ");
 	key = get_str();
 	if (strlen(key) != n)
 	{
-		printf("Ключ не совпадает по длине \n");
+		printf("     \n");
 		free(key);
 		return;
 	}
@@ -225,81 +225,157 @@ void d_find_by_key_N(Node* root) // диалоговая функция поиска по N символам
 	free(key);
 }
   
-void d_delete(Node* root) // диалоговая функция удаления элемента
+void d_delete(Node* root) //    
 {
 	char* key;
-	printf("Введите ключ для удаления: ");
+	printf("   : ");
 	key = get_str();
 	delete(root, key);
 	free(key);
 }
  
-void d_show(Node* root) // диалоговая функция вывода в порядке ключей
+void d_show(Node* root) //      
 {
 	char* key;
-	printf("Введите ключ: ");
+	printf(" : ");
 	key = get_str();
 	print_for_key(root, key);
 	free(key);
 }
  
-int d_timing() // функция таймирования 
+int d_timingfindbkey() //   
 {
+	printf("\n Timing of searching by key procedure \n");
 	Node* root = NULL;
-	int n = 10, cnt = 1000000, i, m;
+	int n = 10, cnt = 100000, i, m;
 	clock_t first, last;
 	srand(time(NULL));
 	char* k;
 	char* info = '\0';
 	char* key[10000];
+		int mid[10];
+		int dtime = 0;
+		int ftime = 0;
 	while (n-- > 0)
 	{
-		for (i = 0; i < 10000; ++i) // создаём массив ключей 
+		dtime = 0;
+		for(int g = 0; g < 10; ++g)
 		{
-			int len = rand() % 20 + 1;
-			key[i] = (char*)malloc((len + 1) * sizeof(char));
-			for (int j = 0; j < len; ++j)
+			for (i = 0; i < 10000; ++i) //    
 			{
-				key[i][j] = rand() % 56 + 65;
+				int len = rand() % 20 + 1;
+				key[i] = (char*)malloc((len + 1) * sizeof(char));
+				for (int j = 0; j < len; ++j)
+				{
+					key[i][j] = rand() % 56 + 65;
+				}
+				key[i][len] = '\0';
 			}
-			key[i][len] = '\0';
+			for (i = 0; i < cnt;) //         
+			{
+				int len = rand() % 20 + 1;
+				k = (char*)malloc((len + 1) * sizeof(char));
+				for (int j = 0; j < len; ++j)
+				{
+					k[j] = rand() % 56 + 65;
+				}
+				k[len] = '\0';
+				int count = 0;
+				count = add(&root, k, info);
+				if (!count)
+					++i;
+				if (count == 2) //      ,   
+				{
+					free(k);
+					free(info);
+				}
+			}
+			m = 0;
+			first = clock();
+			for (i = 0; i < 10000; ++i)
+				if (find_by_key(&root, key[i])) //  
+					++m;
+			last = clock();
+			mid[g] = last - first;
+			dtime += mid[g];
 		}
-		for (i = 0; i < cnt;) // создаём ключ и добавляем его и информацию в дерево
-		{
-			int len = rand() % 20 + 1;
-			k = (char*)malloc((len + 1) * sizeof(char));
-			for (int j = 0; j < len; ++j)
-			{
-				k[j] = rand() % 56 + 65;
-			}
-			k[len] = '\0';
-			int count = 0;
-			count = add(&root, k, info);
-			if (!count)
-				++i;
-			if (count == 2) // если ключ не вставляется в дерево, нужно очистить память
-			{
-				free(k);
-				free(info);
-			}
-		}
-		m = 0;
-		first = clock();
-		for (i = 0; i < 10000; ++i)
-			if (find_by_key(&root, key[i])) // поиск элементов
-				++m;
-		last = clock();
-		for (i = 0; i < 10000; ++i) // очистка памяти массива ключей
+		ftime = dtime / 10;
+		for (i = 0; i < 10000; ++i) //    
 			free(key[i]);
 		printf("%d items was found\n", m);
-		printf("test #%d, number of nodes = %d, time = %d\n", 10 - n, (10 - n) * cnt, last - first);
+		printf("test #%d, number of nodes = %d, time = %d\n", 10 - n, (10 - n) * cnt, ftime);
 	}
 	delete_table(root);
- 
 	return 1;
 }
 
-void d_show_tree(Node* root, int p, int s) // функция печати дерева в виде дерева
+int d_timingfindbnkey()
+{
+	printf("\n Timing of searching by N symbols of key procedure \n");
+	Node* root = NULL;
+	int n = 10, cnt = 100000, i, m;
+	clock_t first, last;
+	srand(time(NULL));
+	char* k;
+	char* info = '\0';
+	char* key[10000];
+	int mid[10];
+	int dtime = 0;
+	int ftime = 0;
+	while (n-- > 0)
+	{
+		dtime = 0;
+		for(int g = 0; g < 10; ++g)
+		{
+			for (i = 0; i < 10000; ++i) //    
+			{
+				int len = rand() % 20 + 1;
+				key[i] = (char*)malloc((len + 1) * sizeof(char));
+				for (int j = 0; j < len; ++j)
+				{
+					key[i][j] = rand() % 56 + 65;
+				}
+				key[i][len] = '\0';
+			}
+			for (i = 0; i < cnt;) //         
+			{
+				int len = rand() % 20 + 1;
+				k = (char*)malloc((len + 1) * sizeof(char));
+				for (int j = 0; j < len; ++j)
+				{
+					k[j] = rand() % 56 + 65;
+				}
+				k[len] = '\0';
+				int count = 0;
+				count = add(&root, k, info);
+				if (!count)
+					++i;
+				if (count == 2) //      ,   
+				{
+					free(k);
+					free(info);
+				}
+			}
+			m = 0;
+			first = clock();
+			for (i = 0; i < 10000; ++i)
+				if (find_by_key_N(&root, key[i], strlen(key[i]) - rand() % 2)) //  
+					++m;
+			last = clock();
+			mid[g] = last - first;
+			dtime += mid[g];
+		}
+		ftime = dtime / 10;
+		for (i = 0; i < 10000; ++i) //    
+			free(key[i]);
+		printf("%d items was found\n", m);
+		printf("test #%d, number of nodes = %d, time = %d\n", 10 - n, (10 - n) * cnt, ftime);
+	}
+	delete_table(root);
+	return 1;
+}
+
+void d_show_tree(Node* root, int p, int s) //      
 {
 	int i;
 	if (root == NULL)
@@ -321,8 +397,8 @@ void d_show_tree(Node* root, int p, int s) // функция печати дерева в виде дерев
 ///////////////////////////////////////////////////////
 
 
-///////////////////// Узловые функции ///////////////
-Node* addNode(char* key, char* info, Node* parent) // функция создания вершины
+/////////////////////   ///////////////
+Node* addNode(char* key, char* info, Node* parent) //   
 {
 	Node* tmp = (Node*)malloc(sizeof(Node));
 	tmp->left = tmp->right = NULL;
@@ -332,7 +408,7 @@ Node* addNode(char* key, char* info, Node* parent) // функция создания вершины
 	return tmp;
 }
 
-Node* find_by_key(Node** root, char* key) // функция поиска элемента по ключу
+Node* find_by_key(Node** root, char* key) //     
 {
 	int k;
 	Node* tmp;
@@ -357,7 +433,7 @@ Node* find_by_key(Node** root, char* key) // функция поиска элемента по ключу
 	return NULL;
 }
 
-Node* minNode(Node* root) // функция поиска минимального элемента в поддереве
+Node* minNode(Node* root) //      
 {
 	while (root->left)
     {
@@ -366,7 +442,7 @@ Node* minNode(Node* root) // функция поиска минимального элемента в поддереве
     return root;
 }
 
-Node* maxNode(Node* root) // функция поиска максимального элемента в поддереве
+Node* maxNode(Node* root) //      
 {
 	while (root->right)
 	{	
@@ -375,7 +451,7 @@ Node* maxNode(Node* root) // функция поиска максимального элемента в поддереве
     return root;
 }
  
-Node* nextElem(Node** root) // функция поиска следующего элемента
+Node* nextElem(Node** root) //    
 {
 	Node* cur = root, * ppar = NULL;
 	if (cur->right)
@@ -391,7 +467,7 @@ Node* nextElem(Node** root) // функция поиска следующего элемента
 	return ppar;
 }
 
-Node* print_for_key(Node** root, char* key) // функция вывода в порядке ключей 
+Node* print_for_key(Node** root, char* key) //      
 {
 	Node* cur = NULL;
 	cur = minNode(*root);
@@ -414,13 +490,13 @@ Node* print_for_key(Node** root, char* key) // функция вывода в порядке ключей
 ///////////////////////////////////////////////////////
 
 
-/////////////////// Табличные функции ////////////////
-int add(Node** root, char* key, char* info) // функция добавления элемента в дерево
+///////////////////   ////////////////
+int add(Node** root, char* key, char* info) //     
 {
 	int k = 0;
 	Node* tmp = NULL;
     Node* ins = NULL;
-	if (*root == NULL) // если дерево пустое, создаём корень
+	if (*root == NULL) //   ,  
 	{
 		*root = addNode(key, info, NULL);
 		return 0;
@@ -430,7 +506,7 @@ int add(Node** root, char* key, char* info) // функция добавления элемента в дер
 		tmp = *root;
 		while (tmp)
 		{
-			if ((k = strcmp(tmp->key, key)) < 0) // если ключ больше ключа текущей вершины 
+			if ((k = strcmp(tmp->key, key)) < 0) //       
 			{
 				if (tmp->right)
 				{
@@ -443,7 +519,7 @@ int add(Node** root, char* key, char* info) // функция добавления элемента в дер
 					return 0;
 				}
 			}
-			else if ((k = strcmp(tmp->key, key)) > 0) // если ключ меньше ключа текущей вершины
+			else if ((k = strcmp(tmp->key, key)) > 0) //      
 			{
 				if (tmp->left)
 				{
@@ -458,7 +534,7 @@ int add(Node** root, char* key, char* info) // функция добавления элемента в дер
 			}
 			else
 			{
-				return 2; // если ключ нашёлся такой же ключ
+				return 2; //      
 			}
 		}
 	}
@@ -466,9 +542,9 @@ int add(Node** root, char* key, char* info) // функция добавления элемента в дер
 
 char* r_from_file(FILE* file)
 {
-	char* ptr = (char*)malloc(1);  //строка
-	char buf[100]; //буфер для получения из входного потока
-	int n = 0, len = 0; //len - длина строки
+	char* ptr = (char*)malloc(1);  //
+	char buf[100]; //     
+	int n = 0, len = 0; //len -  
 	*ptr = '\0';
 	do 
     {
@@ -486,7 +562,7 @@ char* r_from_file(FILE* file)
         else 
         {
 			len += strlen(buf);
-			ptr = (char*)realloc(ptr, len + 1); // добавляем память
+			ptr = (char*)realloc(ptr, len + 1); //  
 			strcat(ptr, buf);
 		}
 	} 
@@ -496,7 +572,7 @@ char* r_from_file(FILE* file)
  
 int findd = 0;
  
-void find_by_key_N(Node** root, char* key, int n) // функция поиска по N символам
+void find_by_key_N(Node** root, char* key, int n) //    N 
 {
 	Node* tmp;
 	int k = 0;
@@ -514,13 +590,34 @@ void find_by_key_N(Node** root, char* key, int n) // функция поиска по N символа
 		find_by_key_N(&tmp->right, key, n);
 		free(erease_key);
 	}
-	return;
+	return 1;
 }
  
-void delete(Node** root, char* key) // функция удаления элемента
+int t_find_by_key_N(Node** root, char* key, int n) //    N 
+{
+	Node* tmp;
+	int k = 0;
+	tmp = *root;
+	if (tmp)
+	{
+		char* erease_key = calloc(n, (n + 1) * sizeof(char));
+		strncat(erease_key, tmp->key, n);
+		if ((k = strcmp(erease_key, key)) == 0)
+		{
+			findd++;
+			return 1;
+		}
+		t_find_by_key_N(&tmp->left, key, n);
+		t_find_by_key_N(&tmp->right, key, n);
+		free(erease_key);
+	}
+	return 0;
+}
+
+void delete(Node** root, char* key) //   
 {
 	Node* cur = NULL, * pred = NULL;
-	cur = find_by_key(root, key); // поиск удаляемого элемента
+	cur = find_by_key(root, key); //   
 	if (!cur->par && !cur->right && !cur->left)
 	{
 		free(cur->info);
@@ -534,9 +631,9 @@ void delete(Node** root, char* key) // функция удаления элемента
     {
     	return;
     }
-    if (!cur->par) // если удаляется корень 
+    if (!cur->par) //    
 	{
-		if (cur->right) // если есть правое поддерево
+		if (cur->right) //    
 		{
 			pred = minNode(cur->right);
 			Node* tmp = pred->par;
@@ -551,7 +648,7 @@ void delete(Node** root, char* key) // функция удаления элемента
             }
             free(pred);
 		}
-		else // если есть только левое
+		else //    
 		{
 			pred = maxNode(cur->left);
 			Node* tmp = pred->par;
@@ -571,9 +668,9 @@ void delete(Node** root, char* key) // функция удаления элемента
             free(pred);
 		}
 	}
-	else // если удаляется не корень
+	else //    
 	{
-		if (!cur->left && !cur->right) // если у элемента нет потомков
+		if (!cur->left && !cur->right) //     
 		{
 			pred = cur->par;
 			if (cur == pred->right)
@@ -588,7 +685,7 @@ void delete(Node** root, char* key) // функция удаления элемента
 			free(cur->info);
 			free(cur);
 		}
-		else if (!cur->left && cur->right) // если у элемента потомок справа
+		else if (!cur->left && cur->right) //     
 		{
 			pred = cur->par;
 			if (cur == pred->right)
@@ -605,7 +702,7 @@ void delete(Node** root, char* key) // функция удаления элемента
 			free(cur->key);
 			free(cur);
 		}
-		else if (cur->left && !(cur->right)) // если у элемента потомок слева
+		else if (cur->left && !(cur->right)) //     
 		{
 			pred = cur->par;
 			if (cur == pred->right)
@@ -622,7 +719,7 @@ void delete(Node** root, char* key) // функция удаления элемента
 			free(cur->key);
 			free(cur);
 		}
-		else if (cur->left && cur->right) // если у элемента оба потомка
+		else if (cur->left && cur->right) //     
 		{
 			if (!cur->right->left)
 			{
@@ -654,7 +751,7 @@ void delete(Node** root, char* key) // функция удаления элемента
 	return;
 }
 
-void delete_table(Node* root) // очистка всего дерева
+void delete_table(Node* root) //   
 {
 	if (root)
 	{
@@ -666,7 +763,7 @@ void delete_table(Node* root) // очистка всего дерева
 	}
 }
  
-void print(Node* root) // функция печати элементов дерева
+void print(Node* root) //    
 {
 	if (root != NULL)
 	{
@@ -676,7 +773,7 @@ void print(Node* root) // функция печати элементов дерева
 	}
 }
  
-void showLine(char* c, int p, int s) // функция печати вспомогательных линий 
+void showLine(char* c, int p, int s) //     
 {
 	int t = s, i; 
 	for (i = 0; i < p; i++) 
@@ -693,44 +790,73 @@ int main(void)
 	Node* root = NULL;
     setlocale(LC_ALL,"Russian"); 
 	int rc, p = 0, s = 0;
-	while (rc = dialog(msgs, NMsgs)) // вызов пользовательского меню
+	while (rc = dialog(msgs, NMsgs)) //   
 	{
-		if (rc == 1)            // добавление элемента
+		if (rc == 1)            //  
         { 
 			d_add(&root);
 		}
-        else if (rc == 2)            // добавление дерева из файла
+        else if (rc == 2)            //    
         {
 			d_r_from_file(&root); 
 		}
-        else if (rc == 3)            // поиск по ключу
+        else if (rc == 3)            //   
         {
-			d_find_by_key(&root); 
+			if(root)
+			{	
+				d_find_by_key(&root); 
+			}
+			else
+			{
+				printf("%s \n", errmsgs[4]);
+			}	
 		}
-        else if (rc == 4)            // поиск по первым N элементам
-		{
-			d_find_by_key_N(&root); 
-			if (!findd)
-            {
-				printf("%s \n",errmsgs[3]);
-            }
+        else if (rc == 4)            //    N 
+		{	
+			if(root)
+			{
+				d_find_by_key_N(&root); 
+				if (!findd)
+				{
+					printf("%s \n",errmsgs[3]);
+				}
+			}
+			else
+			{
+				printf("%s \n", errmsgs[4]);
+			}
         }
-		else if (rc == 5)
-        {
-			d_delete(&root);            // удаление элемента из дерева
+		else if (rc == 5)			//    
+        {	
+			if(root)
+			{	
+				d_delete(&root);			
+			}
+			else
+			{
+				printf("%s \n", errmsgs[4]);
+			}          
 		}
-        else if (rc == 7)
+        else if (rc == 7)			//     
         {
-			d_show(&root);          // вывод таблицы в порядке кючей
+			if(root)
+			{	
+				d_show(&root); 
+			}
+			else
+			{
+				printf("%s \n", errmsgs[4]);
+			}        
 		}
         else if (rc == 6)
         {
-			d_timing();          // таймирования
+			d_timingfindbkey(); 
+			d_timingfindbnkey();
 		}
         else if (rc == 8) 
 		{
 			printf("\nTree: \n");
-			d_show_tree(root, p, s);            // вывод дерева в виде дерева
+			d_show_tree(root, p, s);            //     
 		}
         else if ( rc == 9)
         {
@@ -739,7 +865,7 @@ int main(void)
         }
         printf("------------------------------------------------------------- \n");
 	}
-	delete_table(root); // очистка дерева
-	printf("До связи \n");
+	delete_table(root); //  
+	printf("  \n");
 	return 0;
 }
