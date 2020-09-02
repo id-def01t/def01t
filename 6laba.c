@@ -20,7 +20,7 @@ struct Node {
     size_t x;
     size_t y;
     enum TYPE_NODE type;
-    struct Node* next; // An array of linked nodes
+    struct Node* next; 
 };
 
 // ????????? ?????? ?????
@@ -53,7 +53,9 @@ const char *msgs[] = {
         "6. Delete node",
         "7. Escape way",
         "8. Show graph",
-        "9. Exit" };
+        "9. Clear graph",
+        "10. Way timing",
+        "11. Exit" };
 
 // ????? ??????????? 
 const int NMsgs = sizeof(msgs) / sizeof(msgs[0]);
@@ -79,6 +81,7 @@ struct Node* findWay(struct Graph*, struct Node*, size_t*, size_t);
 void printWays(struct Graph*, size_t);
 struct Graph* getRandomGraph();
 void destroyGraph(struct Graph*);
+char* getStrTypeNode(const enum TYPE_NODE);
 ////////////////////////////////////////////////////////////////
 
 
@@ -96,7 +99,7 @@ int dialog(const char* mes[], int max)
         gi = get_int(&rc);
         if ( rc > max )
         {
-            printf("Enter a number from 1 to 9 \n");
+            printf("Enter a number from 1 to 11 \n");
         }
     }
     while ( rc < 1 || rc > max );   // ????????? ?? ????????????
@@ -363,28 +366,23 @@ struct Graph* createGraph(size_t size)          // ??????? ????????? ????
     return graph;
 }
 
-void printGraph(const struct Graph* graph)          // ??????? ????????? ???? ? ???? ?????? ????????? 
+void printGraph(const struct Graph* graph)
 {
-    for (size_t i = 0; i < graph->size; i++) 
-    {
-        struct Node* node = graph->listNode[i].head;
-        printf("\n List of vertex %zu\n head ", i);
-        while (node) 
+    for (size_t i = 0; i < graph->size; i++) {
+        struct Node* mainNode = graph->listNode[i].head;
+        struct Node* nextNode = mainNode->next;
+
+        printf("\n List of vertex %zu\n: ", i);
+        if(!mainNode -> next)
         {
-            printf(" -> (x: %zu; y: %zu)[type: ", node->x, node->y);
-            switch (node->type) 
-            {
-                case CROSSROAD:
-                    printf("crossroad]");
-                    break;
-                case DEAD_END:
-                    printf("dead end]");
-                    break;
-                case EXIT:
-                    printf("exit]");
-                    break;
-            }
-            node = node->next;
+            printf("(x: %zu, y: %zu, type: %s); \n", mainNode->x, mainNode->y,getStrTypeNode(mainNode->type));
+            continue;
+        }
+        while (nextNode) {
+            printf("Vertex #%zu (x: %zu, y: %zu, type: %s) -> Vertex #%zu (x: %zu, y: %zu, time: %s)\n",
+                   i, mainNode->x, mainNode->y, getStrTypeNode(mainNode->type), getNumberNode(graph, nextNode),
+                   nextNode->x, nextNode->y, getStrTypeNode(nextNode->type));
+            nextNode = nextNode->next;
         }
         printf("\n");
     }
@@ -700,6 +698,42 @@ struct Graph* getRandomGraph()          // ???????? ?????????? ?????
     return graph;
 }
 
+struct Graph* t_getRandomGraph(int count)
+{
+    struct Graph* graph = createGraph(0);
+    srand((unsigned)time(NULL)); // ????????? ???????
+    int countNodes = count;
+    //printf(" Nodes number is %d \n but ditected is %d \n", countNodes, count);
+    for (size_t i = 0; i < countNodes; i++) 
+    {
+        size_t x = rand() % 10;
+        size_t y = rand() % 10;
+        enum TYPE_NODE type = CROSSROAD;
+        size_t randType = rand() % 3 + 1;
+        switch (randType) 
+        {
+            case 1:
+                type = CROSSROAD;
+                break;
+            case 2:
+                type = DEAD_END;
+                break;
+            case 3:
+                type = EXIT;
+                break;
+        }
+        addNode(graph, createNode(x, y, type));
+    }
+    for (size_t i = 0; i < countNodes; i++) 
+    {
+        size_t src = rand() % countNodes;
+        size_t dest = rand() % countNodes;
+        addEdge(graph, src, dest, true);
+    }
+    
+    return graph;
+}
+
 void destroyGraph(struct Graph* graph)           // ???????? ????? ?? ??????
 {
     for (size_t i = 0; i < graph->size; i++) 
@@ -728,12 +762,127 @@ void destroyGraph(struct Graph* graph)           // ???????? ????? ?? ??????
         free(graph);
     }
 }
+
+char* getStrTypeNode(const enum TYPE_NODE type)
+{
+    if (type == CROSSROAD) {
+        return "crossroad";
+    } else if (type == DEAD_END) {
+        return "deadend";
+    } else {
+        return "exit";
+    }
+}
+
+void createDot(const struct Graph* graph, char *fname)
+{
+    char *name = (char *)malloc(strlen(fname) + 5);
+	strcpy(name, fname);
+	strcat(name, ".dot");
+	FILE *fd_dot = fopen(name, "w+");
+	fprintf(fd_dot, "digraph G {node [shape=\"circle\"];rankdir=\"LR\";");
+    for (size_t i = 0; i < graph->size; i++) 
+    {
+        struct Node* mainNode = graph->listNode[i].head;
+        struct Node* nextNode = mainNode->next;
+        if(!mainNode -> next)
+        {
+            fprintf(fd_dot, "\"%d - %d %s\";", mainNode->x, mainNode->y,getStrTypeNode(mainNode->type));
+			continue;
+        }
+        while (nextNode) 
+        {
+            fprintf(fd_dot," \"%zu - %zu %s\" -> \"%zu - %zu %s\";", mainNode->x, mainNode->y, getStrTypeNode(mainNode->type), nextNode->x, nextNode->y, getStrTypeNode(nextNode->type));
+            
+            nextNode = nextNode->next;
+        }
+    }
+    fprintf(fd_dot, "}");
+	free(name);
+	fclose(fd_dot);
+	fd_dot = NULL;
+}
+
+int t_printWays(struct Graph* graph, size_t src)         // ??????? ?????? ???? ?????? ???? ?? ???? ??? ????????? ?? ??????
+{
+    //printf(" Error 1 \n");
+    size_t* prevWay = (size_t*)malloc(graph->size * sizeof(size_t));
+    //printf(" Error 2 \n");
+    memset(prevWay, 0, graph->size * sizeof(size_t));
+   // printf(" Error 3 \n");
+    if (graph->size > 0)
+    {
+        prevWay[0] = src;
+    }
+    struct Node* srcNode = copyNode(graph->listNode[src].head);
+    struct Node* way = findWay(graph, srcNode, prevWay, 0);
+
+    // ???? ???? ??? ??????
+    if (way) 
+    {
+        return 1;
+    } 
+    else 
+    {
+        return 2;
+    }
+    if (prevWay)
+    {
+        free(prevWay);
+    }
+    return 0;
+}
+
+void t_findway()
+{
+    struct Graph* graph = createGraph(0);
+    int n = 10, cnt = 2500, i, m;
+	clock_t first, last;
+	srand(time(NULL));
+	int ver[1000];
+	int mid[10];
+	int dtime;
+	int ftime = 0;
+	while (n-- > 0)
+	{
+        dtime = 0;
+		for(int g = 0; g < 10; ++g)
+		{
+            graph = t_getRandomGraph(cnt);
+            
+            for( int i = 0; i < 1000; ++i)
+            {
+                int num = 35 + rand() % 893;
+                ver[i] = num;
+            }
+            m = 0;
+            first = clock();
+            for( int i = 0; i < 1000; ++i)
+            {
+                if(t_printWays(graph, ver[i]) == 1)
+                {
+                    ++m;
+                }
+            }
+            last = clock();
+            mid[g] = last - first;
+            dtime += mid[g];
+            graph = t_getRandomGraph(cnt);
+        }
+        ftime = dtime / 10;
+       
+        printf("%d items was found\n", m);
+		printf("test #%d, number of nodes = %d, time = %d\n", 10 - n, (10 - n) * cnt, ftime);
+
+    }
+    return 0;
+}
 ////////////////////////////////////////////////////////////////
 
 
 int main()
 {
-    struct Graph* graph = NULL;
+    struct Graph* graph = createGraph(0);
     int rc;
     while (1) 
     {  
@@ -775,12 +924,11 @@ int main()
         } 
         else if (rc == 4) 
         {
-            if (!graph) 
+            /*if (!graph) 
             {
                 printf("%s \n", errmsgs[1]);
-                
                 continue;
-            }
+            }*/
             int x, y, gi;
             char *typeStr = NULL;
             enum TYPE_NODE type;
@@ -836,7 +984,7 @@ int main()
             int src, gi;
             printf("Enter number of node u want to delete: ");
             gi = get_int(src);
-            removeNode(graph,src);
+            removeNode(graph, src);
             printf("%s \n", errmsgs[0]);
         } 
         else if (rc == 7) 
@@ -859,6 +1007,10 @@ int main()
         } 
         else if (rc == 8) 
         {
+            char *pathname = NULL;
+            printf("Enter the file name: ");
+            pathname = get_str();
+            createDot(graph, pathname);
             if (!graph) 
             {
                 printf("%s \n", errmsgs[1]);
@@ -866,6 +1018,18 @@ int main()
             }
             printGraph(graph);
         } 
+        else if (rc == 9)
+        {
+            if (graph)
+            {
+                destroyGraph(graph);
+            }
+            graph = createGraph(0);
+        }
+        else if (rc == 10)
+        {
+            t_findway();
+        }
         else if (rc == NMsgs) 
         {
             if (graph)
